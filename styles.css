@@ -1,0 +1,108 @@
+/* Prestyled elements*/
+h1, h2, h3, h4, h5, h6, ul, ol, p {
+  margin-top: 0;
+  margin-bottom: 0;
+  margin-top: 0;
+  margin-bottom: 0;
+}
+
+ul, ol {
+  padding-left: 1.2rem;
+}
+
+input {
+  font-family: inherit;
+  font-size: inherit;
+  background: var(--input-bg);
+  color: var(--foreground);
+  border: 1px solid var(--input-border);
+  padding: 0.5em;
+  margin-right: 0.5em;
+}
+
+button {
+  font-family: inherit;
+  font-size: inherit;
+  background: var(--button-bg);
+  color: var(--button-fg);
+  border: 1px solid var(--input-border);
+  padding: 0.5em 1em;
+  cursor: pointer;
+}
+
+button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+
+/* Block elements */
+.block {
+  display: flex;
+  flex-direction: column;
+}
+
+.column {
+  gap: 1rem;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+.line {
+  display: flex;
+  align-items: center;
+}
+
+.search-query {
+  flex: 1;
+  resize: vertical;
+  background: var(--input-bg);
+  padding: 0.5em;
+  resize: vertical;
+  color: var(--foreground);
+}
+
+.history-line-content {
+  flex: 1;
+  cursor: pointer;
+  display: flex;
+  padding: 0.25rem 1rem;
+  align-items: center;
+  user-select: none;
+  justify-content: space-between;
+
+  &:hover {
+    background: var(--button-bg);
+  }
+
+  .delete-btn {
+    color: var(--foreground);
+    opacity: 0.2;
+    transition: opacity 0.3s;
+
+    &:hover {
+      color: var(--alert);
+      opacity: 1;
+      transition: opacity 0.3s;
+    }
+  }
+}
+
+
+/* Utilities */
+.pb-05 {
+  padding-bottom: 0.5rem;
+}
+
+.pb-1 {
+  padding-bottom: 1rem;
+}
+
+.gap-1 {
+  gap: 1rem;
+}
+
+.pointer {
+  cursor: pointer;
+}
