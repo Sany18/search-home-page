@@ -32,8 +32,10 @@
       padding: 1rem;
       display: flex;
       font-size: 16px;
+      flex-wrap: wrap;
       box-sizing: border-box;
       min-height: 100svh;
+      align-items: flex-start;
       font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
       color: var(--foreground);
       background: var(--background);
@@ -48,37 +50,41 @@
 </head>
 
 <body>
-  <div class="column">
-    <div class="block">
+  <div class="flex column gap-1">
+    <div class="flex column">
       <h2 class="pb-05">Google Search</h2>
+
       <form
         id="google-search-form"
+        class="flex gap-1 wrap"
         action="https://www.google.com/search"
         method="GET"
         target="_blank"
         autocomplete="off"
         onsubmit="return handleGoogleSearch(event)">
-        <div class="line gap-1">
-          <textarea
-            name="q"
-            rows="2"
-            class="search-query"
-            placeholder="Search Google..."
-            role="searchbox"
-            aria-label="Search Google"></textarea>
-          <input type="hidden" id="udm-param" name="udm" value="14">
+        <textarea
+          name="q"
+          rows="2"
+          class="search-query"
+          placeholder="Search Google..."
+          role="searchbox"
+          aria-label="Search Google"></textarea>
+        <input type="hidden" id="udm-param" name="udm" value="14">
+
+        <div class="flex gap-1">
           <button class="search-button" type="submit">Search</button>
           <button class="clear-input" type="button">Clear</button>
         </div>
       </form>
     </div>
-  </div>
 
-  <div class="column">
     <div class="history">
       <h2 class="pb-05">Search History</h2>
       <ol id="search-history-list"></ol>
     </div>
+  </div>
+
+  <div class="column">
   </div>
 </body>
 </html>
