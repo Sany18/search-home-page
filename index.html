@@ -11,6 +11,7 @@
       --button-bg: #e0e0e0;
       --button-fg: #222;
       --alert: #af0012;
+      --comment: #555;
     }
 
     /* Dark mode */
@@ -23,18 +24,19 @@
         --button-bg: #444;
         --button-fg: #fff;
         --alert: #af0012;
+        --comment: #aaa;
       }
     }
     
     body {
       gap: 1rem;
       margin: 0;
+      height: 100svh;
       padding: 1rem;
       display: flex;
       font-size: 16px;
       flex-wrap: wrap;
       box-sizing: border-box;
-      min-height: 100svh;
       align-items: flex-start;
       font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
       color: var(--foreground);
@@ -50,7 +52,7 @@
 </head>
 
 <body>
-  <div class="flex column gap-1">
+  <div class="flex column gap-1 h-100">
     <div class="flex column">
       <h2 class="pb-05">Google Search</h2>
 
@@ -85,6 +87,12 @@
   </div>
 
   <div class="column">
+    <p class="pre comment">
+  Enter --------------------- search
+  Ctrl + Enter -------------- new line
+  Single history line ------- fill input
+  Double click history line - search the line
+    </p>
   </div>
 </body>
 </html>
