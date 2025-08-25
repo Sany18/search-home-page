@@ -4,31 +4,35 @@ const DEFAULT_EXCLUDE_RULES = '-ru -и -ы';
 const MAX_HISTORY = 100;
 
 document.addEventListener('DOMContentLoaded', function () {
-  const excludeRulesInput = document.getElementById('exclude-rules');
+  const queryInput = document.querySelector('.search-query-input');
+  const searchButton = document.querySelector('.search-button');
+  const historyList = document.getElementById('search-history-list');
+  const clearInputButton = document.querySelector('.clear-input-button');
+  const udmFormParam = document.getElementById('udm-param');
+  const excludeRulesInput = document.getElementById('exclude-rules-input');
+
   excludeRulesInput.value = localStorage.getItem(EXCLUDE_RULES_KEY) || DEFAULT_EXCLUDE_RULES;
-  excludeRulesInput.addEventListener('input', function () {
+  excludeRulesInput.addEventListener('input', () => {
     localStorage.setItem(EXCLUDE_RULES_KEY, excludeRulesInput.value);
   });
-  
-  // Enable/disable search button based on textarea value
-  const searchButton = document.querySelector('.search-button');
-  const searchQuery = document.querySelector('.search-query');
-  function updateSearchButtonState() {
-    searchButton.disabled = !searchQuery.value.trim();
+
+  // Enable/disable search button based on textarea value;
+  const updateSearchButtonState = () => {
+    searchButton.disabled = !queryInput.value.trim();
   }
-  updateSearchButtonState();
-  searchQuery.addEventListener('input', updateSearchButtonState);
+
+  queryInput.addEventListener('input', updateSearchButtonState);
 
   // Search history logic
-  function getHistory() {
+  const getHistory = () => {
     return JSON.parse(localStorage.getItem(HISTORY_KEY) || '[]');
   }
 
-  function saveHistory(history) {
+  const saveHistory = (history) => {
     localStorage.setItem(HISTORY_KEY, JSON.stringify(history));
   }
 
-  function addToHistory(query) {
+  const addToHistory = (query) => {
     let history = getHistory();
     history = history.filter(item => item !== query);
     history.unshift(query);
@@ -37,16 +41,15 @@ document.addEventListener('DOMContentLoaded', function () {
     renderHistory();
   }
 
-  function removeFromHistory(index) {
+  const removeFromHistory = (index) => {
     let history = getHistory();
     history.splice(index, 1);
     saveHistory(history);
     renderHistory();
   }
 
-  function renderHistory() {
-    const list = document.getElementById('search-history-list');
-    list.innerHTML = '';
+  const renderHistory = () => {
+    historyList.innerHTML = '';
     const history = getHistory();
     history.forEach((item, idx) => {
       const li = document.createElement('li');
@@ -58,12 +61,14 @@ document.addEventListener('DOMContentLoaded', function () {
       contentDiv.className = 'history-line-content';
       contentDiv.textContent = item;
       contentDiv.onclick = () => {
-        document.querySelector('.search-query').value = item;
+        queryInput.value = item;
         updateSearchButtonState();
       };
 
       contentDiv.ondblclick = () => {
-        document.querySelector('.search-button').click();
+        console.log(searchButton);
+        
+        searchButton.click();
       };
 
       // Delete button
@@ -82,34 +87,32 @@ document.addEventListener('DOMContentLoaded', function () {
 
       contentDiv.appendChild(delBtn);
       li.appendChild(contentDiv);
-      list.appendChild(li);
+      historyList.appendChild(li);
     });
   }
 
-  // Show delete button only on hover
-  renderHistory();
-
   // Search logic
-  document.querySelector('.search-button').addEventListener('click', (e) => {
+  searchButton.addEventListener('click', (e) => {
     e.preventDefault();
-    const queryInput = document.querySelector('.search-query');
-    const excludeRulesInput = document.getElementById('exclude-rules').value.replace(/ /g, '+');
+    
+    const _excludeRulesInput = document.getElementById('exclude-rules-input');
+    const excludeRulesValue = _excludeRulesInput.value.replace(/ /g, '+');
     const query = queryInput.value;
     addToHistory(query);
-    const udm = document.getElementById('udm-param').value;
+    const udm = udmFormParam.value;
     // Build the Google search URL with extra params
-    const searchUrl = `https://www.google.com/search?q=${encodeURIComponent(query)}+${excludeRulesInput}&udm=${encodeURIComponent(udm)}`;
+    const searchUrl = `https://www.google.com/search?q=${encodeURIComponent(query)}+${excludeRulesValue}&udm=${encodeURIComponent(udm)}`;
     window.open(searchUrl, '_blank');
     queryInput.value = '';
     updateSearchButtonState();
   });
 
-  document.querySelector('.clear-input').addEventListener('click', (e) => {
-    document.querySelector('.search-query').value = '';
+  clearInputButton.addEventListener('click', () => {
+    queryInput.value = '';
     updateSearchButtonState();
   });
 
-  document.querySelector('.search-query').addEventListener('keydown', function (e) {
+  queryInput.addEventListener('keydown', (e) => {
     if (e.ctrlKey && e.key === 'Enter') {
       // Add new line to textarea
       e.preventDefault();
@@ -121,7 +124,10 @@ document.addEventListener('DOMContentLoaded', function () {
     } else if (e.key === 'Enter') {
       // Open search in new tab
       e.preventDefault();
-      document.querySelector('.search-button').click();
+      searchButton.click();
     }
   });
+
+  renderHistory();
+  updateSearchButtonState();
 });

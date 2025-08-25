@@ -17,7 +17,6 @@ input {
   color: var(--foreground);
   border: 1px solid var(--input-border);
   padding: 0.5em;
-  margin-right: 0.5em;
 }
 
 button {
@@ -49,7 +48,7 @@ button:disabled {
 
 
 /* Block elements */
-.search-query {
+.search-query-input {
   flex: 1;
   resize: vertical;
   background: var(--input-bg);
@@ -88,8 +87,6 @@ button:disabled {
 .history {
   overflow: auto;
 }
-
-
 
 
 /* Utilities */

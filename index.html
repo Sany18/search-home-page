@@ -29,7 +29,7 @@
     }
     
     body {
-      gap: 1rem;
+      gap: 2rem;
       margin: 0;
       height: 100svh;
       padding: 1rem;
@@ -67,7 +67,7 @@
         <textarea
           name="q"
           rows="2"
-          class="search-query"
+          class="search-query-input"
           placeholder="Search Google..."
           role="searchbox"
           aria-label="Search Google"></textarea>
@@ -75,15 +75,15 @@
 
         <div class="flex gap-1">
           <button class="search-button" type="submit">Search</button>
-          <button class="clear-input" type="button">Clear</button>
+          <button class="clear-input-button" type="button">Clear</button>
         </div>
       </form>
 
       <div class="flex">
         <input
           type="text" 
-          name="exclude-rules"
-          id="exclude-rules"
+          name="exclude-rules-input"
+          id="exclude-rules-input"
           placeholder="e.g. -ru, -и"
           title="Enter exclusion rules, separated by commas">
       </div>
@@ -97,10 +97,10 @@
 
   <div class="column">
     <p class="pre comment">
-  Enter --------------------- search
-  Ctrl + Enter -------------- new line
-  Single history line ------- fill input
-  Double click history line - search the line
+Enter --------------------- search
+Ctrl + Enter -------------- new line
+Single history line ------- fill input
+Double click history line - search the line
     </p>
   </div>
 </body>
