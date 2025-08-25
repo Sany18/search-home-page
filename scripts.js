@@ -1,7 +1,15 @@
 const HISTORY_KEY = 'searchHistory';
+const EXCLUDE_RULES_KEY = 'excludeRules';
+const DEFAULT_EXCLUDE_RULES = '-ru -и -ы';
 const MAX_HISTORY = 100;
 
 document.addEventListener('DOMContentLoaded', function () {
+  const excludeRulesInput = document.getElementById('exclude-rules');
+  excludeRulesInput.value = localStorage.getItem(EXCLUDE_RULES_KEY) || DEFAULT_EXCLUDE_RULES;
+  excludeRulesInput.addEventListener('input', function () {
+    localStorage.setItem(EXCLUDE_RULES_KEY, excludeRulesInput.value);
+  });
+  
   // Enable/disable search button based on textarea value
   const searchButton = document.querySelector('.search-button');
   const searchQuery = document.querySelector('.search-query');
@@ -10,6 +18,7 @@ document.addEventListener('DOMContentLoaded', function () {
   }
   updateSearchButtonState();
   searchQuery.addEventListener('input', updateSearchButtonState);
+
   // Search history logic
   function getHistory() {
     return JSON.parse(localStorage.getItem(HISTORY_KEY) || '[]');
@@ -84,11 +93,12 @@ document.addEventListener('DOMContentLoaded', function () {
   document.querySelector('.search-button').addEventListener('click', (e) => {
     e.preventDefault();
     const queryInput = document.querySelector('.search-query');
+    const excludeRulesInput = document.getElementById('exclude-rules').value.replace(/ /g, '+');
     const query = queryInput.value;
     addToHistory(query);
     const udm = document.getElementById('udm-param').value;
     // Build the Google search URL with extra params
-    const searchUrl = `https://www.google.com/search?q=${encodeURIComponent(query)}+-и+-ru&udm=${encodeURIComponent(udm)}`;
+    const searchUrl = `https://www.google.com/search?q=${encodeURIComponent(query)}+${excludeRulesInput}&udm=${encodeURIComponent(udm)}`;
     window.open(searchUrl, '_blank');
     queryInput.value = '';
     updateSearchButtonState();

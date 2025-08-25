@@ -53,8 +53,8 @@
 
 <body>
   <div class="flex column gap-1 h-100">
-    <div class="flex column">
-      <h2 class="pb-05">Google Search</h2>
+    <div class="flex column gap-1">
+      <h2>Google Search</h2>
 
       <form
         id="google-search-form"
@@ -78,6 +78,15 @@
           <button class="clear-input" type="button">Clear</button>
         </div>
       </form>
+
+      <div class="flex">
+        <input
+          type="text" 
+          name="exclude-rules"
+          id="exclude-rules"
+          placeholder="e.g. -ru, -и"
+          title="Enter exclusion rules, separated by commas">
+      </div>
     </div>
 
     <div class="history">
