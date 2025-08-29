@@ -29,13 +29,11 @@
     }
     
     body {
-      gap: 2rem;
       margin: 0;
       height: 100svh;
       padding: 1rem;
       display: flex;
       font-size: 16px;
-      flex-wrap: wrap;
       box-sizing: border-box;
       align-items: flex-start;
       font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
@@ -52,59 +50,59 @@
 </head>
 
 <body>
-  <div class="flex-column gap-1 h-100">
+  <div class="content">
     <div class="flex-column gap-1">
-      <h2>Google Search</h2>
-
-      <form
-        id="google-search-form"
-        class="flex gap-1 wrap"
-        action="https://www.google.com/search"
-        method="GET"
-        target="_blank"
-        autocomplete="off"
-        onsubmit="return handleGoogleSearch(event)">
-        <textarea
-          name="q"
-          rows="2"
-          class="search-query-input"
-          placeholder="Search Google..."
-          role="searchbox"
-          aria-label="Search Google"></textarea>
-        <input type="hidden" id="udm-param" name="udm" value="14">
-
-        <div class="flex gap-1">
-          <button class="search-button" type="submit">Search</button>
-          <button class="clear-input-button" type="button">Clear</button>
+      <div class="flex-column gap-1">
+        <h2>Google Search</h2>
+  
+        <form
+          id="google-search-form"
+          class="flex gap-1 wrap"
+          action="https://www.google.com/search"
+          method="GET"
+          target="_blank"
+          autocomplete="off"
+          onsubmit="return handleGoogleSearch(event)">
+          <textarea
+            name="q"
+            rows="2"
+            class="search-query-input"
+            placeholder="Search Google..."
+            role="searchbox"
+            aria-label="Search Google"></textarea>
+          <input type="hidden" id="udm-param" name="udm" value="14">
+  
+          <div class="flex gap-1">
+            <button class="search-button" type="submit">Search</button>
+            <button class="clear-input-button" type="button">Clear</button>
+          </div>
+        </form>
+  
+        <div class="flex">
+          <input
+            type="text" 
+            name="exclude-rules-input"
+            id="exclude-rules-input"
+            placeholder="e.g. -ru, -и"
+            title="Enter exclusion rules, separated by commas">
+          <button class="reset-filter-button" type="submit">Reset</button>
         </div>
-      </form>
-
-      <div class="flex">
-        <input
-          type="text" 
-          name="exclude-rules-input"
-          id="exclude-rules-input"
-          placeholder="e.g. -ru, -и"
-          title="Enter exclusion rules, separated by commas">
+      </div>
+  
+      <div class="history">
+        <h2 class="pb-05">Search History</h2>
+        <ol id="search-history-list"></ol>
       </div>
     </div>
-
-    <div class="history">
-      <h2 class="pb-05">Search History</h2>
-      <ol id="search-history-list"></ol>
+  
+    <div class="flex-column flex-1">
+      <p class="comment">
+        <b>Enter</b> ------------------------ search<br/>
+        <b>Ctrl + Enter</b> ----------------- new line<br/>
+        Single-click on history line - fill input<br/>
+        Double-click on history line - search the line<br/>
+      </p>
     </div>
-  </div>
-
-  <div class="flex-column flex-1">
-    <p class="pre comment">
-<b>Enter</b> ------------------------ search
-<b>Ctrl + Enter</b> ----------------- new line
-Single-click on history line - fill input
-Double-click on history line - search the line
-
-If the filter input is empty, refresh the
-app to restore the default exclude rules.
-    </p>
   </div>
 </body>
 </html>

@@ -48,6 +48,13 @@ button:disabled {
 
 
 /* Block elements */
+.content {
+  gap: 2rem;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-start;
+}
+
 .search-query-input {
   flex: 1;
   resize: vertical;

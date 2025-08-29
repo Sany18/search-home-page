@@ -10,10 +10,16 @@ document.addEventListener('DOMContentLoaded', function () {
   const clearInputButton = document.querySelector('.clear-input-button');
   const udmFormParam = document.getElementById('udm-param');
   const excludeRulesInput = document.getElementById('exclude-rules-input');
+  const resetFilterButton = document.querySelector('.reset-filter-button');
 
   excludeRulesInput.value = localStorage.getItem(EXCLUDE_RULES_KEY) || DEFAULT_EXCLUDE_RULES;
   excludeRulesInput.addEventListener('input', () => {
     localStorage.setItem(EXCLUDE_RULES_KEY, excludeRulesInput.value);
+  });
+
+  resetFilterButton.addEventListener('click', () => {
+    excludeRulesInput.value = DEFAULT_EXCLUDE_RULES;
+    localStorage.setItem(EXCLUDE_RULES_KEY, DEFAULT_EXCLUDE_RULES);
   });
 
   // Enable/disable search button based on textarea value;
