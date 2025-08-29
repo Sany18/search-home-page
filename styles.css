@@ -1,3 +1,5 @@
+/* Media */
+
 /* Prestyled elements*/
 h1, h2, h3, h4, h5, h6, ul, ol, p {
   margin-top: 0;
@@ -108,7 +110,8 @@ button:disabled {
   display: flex;
 }
 
-.column {
+.flex-column {
+  display: flex;
   flex-direction: column;
 }
 
@@ -134,10 +137,4 @@ button:disabled {
   font-size: 0.9rem;
   line-height: 1.4;
   font-family: monospace;
-}
-
-@media screen and (max-width: 600px) {
-  .flex {
-    flex-direction: column;
-  }
 }
