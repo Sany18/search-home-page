@@ -65,6 +65,8 @@ document.addEventListener('DOMContentLoaded', function () {
     queryInput.value = '';
     updateSearchButtonState();
   });
+
+  updateSearchButtonState();
   //////////////////////////////
   
   //////////////////////////////
@@ -153,8 +155,7 @@ document.addEventListener('DOMContentLoaded', function () {
     saveHistory(history);
     renderHistory();
   }
-  //////////////////////////////
 
   renderHistory();
-  updateSearchButtonState();
+  //////////////////////////////
 });

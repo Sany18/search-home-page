@@ -96,15 +96,33 @@
         <ol id="search-history-list"></ol>
       </div>
 
-      <p class="comment">
-        <b>Enter</b> ------------------------ search<br/>
-        <b>Ctrl + Enter</b> ----------------- new line<br/>
-        Single-click on history line - fill input<br/>
-        Double-click on history line - search the line<br/>
-      </p>
     </div>
-  
+    
     <div class="flex-column flex-1">
+    </div>
+
+    <div class="help-section">
+      <dialog id="help-dialog">
+        <p class="comment mb-1">
+          <b>Enter</b> ------------------------ search<br/>
+          <b>Ctrl + Enter</b> ----------------- new line<br/>
+          Single-click on history line - fill input<br/>
+          Double-click on history line - search the line<br/>
+        </p>
+
+        <form
+          class="flex-end"
+          method="dialog">
+          <button>OK</button>
+        </form>
+      </dialog>
+
+      <button
+        class="help"
+        title="Keyboard shortcuts"
+        onclick="document.getElementById('help-dialog').showModal()">
+        ?
+      </button>
     </div>
   </div>
 </body>

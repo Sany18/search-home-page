@@ -34,6 +34,12 @@ button:disabled {
   cursor: not-allowed;
 }
 
+dialog {
+  color: var(--foreground);
+  padding: 1rem;
+  background: var(--background);
+}
+
 ::-webkit-scrollbar {
   width: 1rem;
 }
@@ -95,6 +101,13 @@ button:disabled {
   overflow: auto;
 }
 
+.help-section {
+  position: absolute;
+  bottom: 1rem;
+  right: 1rem;
+  cursor: pointer;
+}
+
 
 /* Utilities */
 .pb-05 {
@@ -103,6 +116,10 @@ button:disabled {
 
 .pb-1 {
   padding-bottom: 1rem;
+}
+
+.mb-1 {
+  margin-bottom: 1rem;
 }
 
 .gap-1 {
@@ -120,6 +137,18 @@ button:disabled {
 .flex-column {
   display: flex;
   flex-direction: column;
+}
+
+.flex-center {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.flex-end {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
 }
 
 .wrap {
