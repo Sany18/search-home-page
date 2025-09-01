@@ -1,6 +1,20 @@
 /* Media */
+@media screen and (max-width: 600px) {
+  #content {
+    flex-direction: column;
+  }
+
+  #first-column {
+    flex: 1;
+    min-width: unset !important;
+  }
+}
 
 /* Prestyled elements*/
+* {
+  box-sizing: border-box;
+}
+
 h1, h2, h3, h4, h5, h6, ul, ol, p {
   margin-top: 0;
   margin-bottom: 0;
@@ -29,6 +43,21 @@ button {
   cursor: pointer;
 }
 
+button.ghost {
+  font-family: inherit;
+  font-size: inherit;
+  color: var(--button-fg);
+  border: none;
+  background: none;
+  border-radius: 1rem;
+  padding: 0.5em 1em;
+  cursor: pointer;
+
+  &:hover {
+    background: var(--button-bg);
+  }
+}
+
 button:disabled {
   opacity: 0.5;
   cursor: not-allowed;
@@ -54,21 +83,36 @@ dialog {
 
 
 /* Block elements */
-.content {
-  gap: 2rem;
+#content {
+  gap: 1rem;
+  height: 100%;
   display: flex;
-  flex-wrap: wrap;
+  padding: 0.5rem;
   align-items: flex-start;
 }
 
-.search-query-input {
+.card {
+  gap: 1rem;
+  padding: 0.5rem;
+  max-height: 100%;
+  overflow: hidden;
+  border-radius: 0.25rem;
+}
+
+#first-column {
+  min-width: 30rem;
+}
+
+#google-search-query-input {
   flex: 1;
-  resize: vertical;
-  background: var(--input-bg);
-  padding: 0.5em;
-  resize: vertical;
   color: var(--foreground);
-  min-width: 20rem;
+  resize: vertical;
+  padding: 0.5em;
+  background: var(--input-bg);
+}
+
+.history {
+  overflow: auto;
 }
 
 .history-line-content {
@@ -76,6 +120,8 @@ dialog {
   cursor: pointer;
   display: flex;
   padding: 0 0 0 1rem;
+  max-width: 600px;
+  word-wrap: break-word;
   align-items: center;
   user-select: none;
   justify-content: space-between;
@@ -97,19 +143,62 @@ dialog {
   }
 }
 
-.history {
-  overflow: auto;
+#bookmarks-list {
+  gap: 0.5rem;
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.bookmark-cell {
+  gap: 1rem;
+  color: var(--foreground);
+  padding: 0.5rem 1rem;
+  display: flex;
+  max-width: 300px;
+  background: var(--input-bg);
+  align-items: center;
+  border-radius: 0.25rem;
+  justify-content: space-between;
+  text-decoration: none;
+
+  &:hover {
+    background: var(--button-bg);
+  }
+
+  .bookmark-text {
+    flex: 1;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+  }
+}
+
+
+.bookmark-delete-btn {
+  background: none;
+  border: none;
+  color: var(--foreground);
+  cursor: pointer;
+  padding: 0;
+
+  &:hover {
+    color: var(--alert);
+  }
 }
 
 .help-section {
-  position: absolute;
-  bottom: 1rem;
   right: 1rem;
+  bottom: 1rem;
   cursor: pointer;
+  position: fixed;
 }
 
 
 /* Utilities */
+.p-05 {
+  padding: 0.5rem;
+}
+
 .pb-05 {
   padding-bottom: 0.5rem;
 }
@@ -118,8 +207,16 @@ dialog {
   padding-bottom: 1rem;
 }
 
+.mt-1 {
+  margin-top: 1rem;
+}
+
 .mb-1 {
   margin-bottom: 1rem;
+}
+
+.gap-05 {
+  gap: 0.5rem;
 }
 
 .gap-1 {
@@ -151,6 +248,12 @@ dialog {
   justify-content: flex-end;
 }
 
+.flex-space {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
 .wrap {
   flex-wrap: wrap;
 }
@@ -173,4 +276,16 @@ dialog {
   font-size: 0.9rem;
   line-height: 1.4;
   font-family: monospace;
+}
+
+.br-025 {
+  border-radius: 0.25rem;
+}
+
+.bg-2 {
+  background: var(--background-2);
+}
+
+.bg-3 {
+  background: var(--background-3);
 }

@@ -1,9 +1,12 @@
 const HISTORY_KEY = 'searchHistory';
+const BOOKMARKS_KEY = 'bookmarks';
 const EXCLUDE_RULES_KEY = 'excludeRules';
 const DEFAULT_EXCLUDE_RULES = '-ru -и -ы';
 const MAX_HISTORY = 100;
 
-const elementNames = {
+const elementIds = {
+  content: '#content',
+  // Section 1
   searchInput: '#google-search-query-input',
   searchButton: '#google-search-button',
   clearInputButton: '#google-search-clear-input-button',
@@ -11,17 +14,22 @@ const elementNames = {
 
   excludeRulesInput: '#exclude-rules-input',
   resetFilterButton: '#reset-filter-button',
-  
-  historyList: '#search-history-list'
+
+  historyList: '#search-history-list',
+
+  // Section 2
+  bookmarksList: '#bookmarks-list',
+  createNewBookmarkButton: '#create-new-bookmark-button',
+  createNewBookmark: '#create-new-bookmark',
 }
 
 document.addEventListener('DOMContentLoaded', function () {
   //////////////////////////////
   // Search input, buttons
-  const queryInput = document.querySelector(elementNames.searchInput);
-  const searchButton = document.querySelector(elementNames.searchButton);
-  const udmFormParam = document.querySelector(elementNames.udmFormParam);
-  const clearInputButton = document.querySelector(elementNames.clearInputButton);
+  const queryInput = $(elementIds.searchInput);
+  const searchButton = $(elementIds.searchButton);
+  const udmFormParam = $(elementIds.udmFormParam);
+  const clearInputButton = $(elementIds.clearInputButton);
 
   // Search input
   queryInput.addEventListener('keydown', (e) => {
@@ -44,10 +52,10 @@ document.addEventListener('DOMContentLoaded', function () {
   const updateSearchButtonState = () => {
     searchButton.disabled = !queryInput.value.trim();
   }
-  
+
   searchButton.addEventListener('click', (e) => {
     // Get fresh value
-    const _excludeRulesInput = document.querySelector(elementNames.excludeRulesInput);
+    const _excludeRulesInput = $(elementIds.excludeRulesInput);
     const excludeRulesValue = _excludeRulesInput.value.replace(/ /g, '+');
     const query = queryInput.value;
     addToHistory(query);
@@ -68,10 +76,10 @@ document.addEventListener('DOMContentLoaded', function () {
 
   updateSearchButtonState();
   //////////////////////////////
-  
+
   //////////////////////////////
   // Exclude rules
-  const excludeRulesInput = document.querySelector(elementNames.excludeRulesInput);
+  const excludeRulesInput = $(elementIds.excludeRulesInput);
 
   excludeRulesInput.value = localStorage.getItem(EXCLUDE_RULES_KEY) || DEFAULT_EXCLUDE_RULES;
   excludeRulesInput.addEventListener('input', () => {
@@ -79,7 +87,7 @@ document.addEventListener('DOMContentLoaded', function () {
   });
 
   // Reset button
-  const resetFilterButton = document.querySelector(elementNames.resetFilterButton);
+  const resetFilterButton = $(elementIds.resetFilterButton);
 
   resetFilterButton.addEventListener('click', () => {
     excludeRulesInput.value = DEFAULT_EXCLUDE_RULES;
@@ -89,7 +97,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
   //////////////////////////////
   // Search history
-  const historyList = document.querySelector(elementNames.historyList);
+  const historyList = $(elementIds.historyList);
 
   const renderHistory = () => {
     historyList.innerHTML = '';
@@ -108,7 +116,7 @@ document.addEventListener('DOMContentLoaded', function () {
         updateSearchButtonState();
       };
 
-      contentDiv.ondblclick = () => {        
+      contentDiv.ondblclick = () => {
         searchButton.click();
       };
 
@@ -158,4 +166,100 @@ document.addEventListener('DOMContentLoaded', function () {
 
   renderHistory();
   //////////////////////////////
+
+  //////////////////////////////
+  // Bookmarks
+  const bookmarksList = $(elementIds.bookmarksList);
+  const createNewBookmark = $(elementIds.createNewBookmark);
+
+  const subscribeToCreateNewBookmark = () => {
+    setTimeout(() => {
+      const createNewBookmarkSubscriptions = () => {
+        const createNewBookmarkEl = $(elementIds.createNewBookmark);
+        const submitButtonEl = createNewBookmarkEl.querySelector('button[type="submit"]');
+  
+        submitButtonEl.addEventListener('click', () => {
+          const payload = Array.from(createNewBookmarkEl.querySelectorAll('input')).map(input => input.value.trim());
+          addBookmark(payload);
+          subscribeToCreateNewBookmark();
+        });
+      }
+      
+      $(elementIds.createNewBookmarkButton).addEventListener('click', () => {
+        createNewBookmarkSubscriptions();
+      });
+    }, 0);
+  }
+
+  subscribeToCreateNewBookmark();
+
+  const renderBookmarks = () => {
+    bookmarksList.innerHTML = '';
+    bookmarksList.innerHTML = createNewBookmark.outerHTML;
+
+    const bookmarks = getBookmarks();
+
+    bookmarks.forEach((item, idx) => {
+      const bookmarkCell = document.createElement('a');
+      bookmarkCell.className = 'bookmark-cell';
+      bookmarkCell.href = itHasUrlSlashes(item[0]) ? item[0] : `http://${item[0]}`;
+      bookmarkCell.target = '_blank';
+      
+      const textEl = document.createElement('div');
+      textEl.className = 'bookmark-text';
+      textEl.innerText = item[1] || item[0];
+
+      // Delete button
+      const delBtn = document.createElement('button');
+      delBtn.textContent = '✕';
+      delBtn.className = 'bookmark-delete-btn';
+      delBtn.onclick = (e) => {
+        e.stopPropagation();
+        e.preventDefault();
+        removeFromBookmarks(idx);
+      };
+
+      bookmarkCell.appendChild(textEl);
+      bookmarkCell.appendChild(delBtn);
+      bookmarksList.appendChild(bookmarkCell);
+    });
+  }
+
+  const getBookmarks = () => {
+    return JSON.parse(localStorage.getItem(BOOKMARKS_KEY) || '[]');
+  }
+
+  const saveBookmarks = (bookmarks) => {
+    localStorage.setItem(BOOKMARKS_KEY, JSON.stringify(bookmarks));
+  }
+
+  const removeFromBookmarks = (index) => {
+    let bookmarks = getBookmarks();
+    bookmarks.splice(index, 1);
+    saveBookmarks(bookmarks);
+    renderBookmarks();
+  }
+
+  const addBookmark = (payload) => {
+    let bookmarks = getBookmarks();
+    bookmarks.push(payload);
+    saveBookmarks(bookmarks);
+    renderBookmarks();
+  }
+
+  renderBookmarks();
+  //////////////////////////////
 });
+
+//////////////////////////////
+// Utils
+if (window.visualViewport) {
+  window.visualViewport.addEventListener('resize', () => {
+    document.body.style.height = `${window.visualViewport.height}px;`;
+  });
+}
+
+const itHasUrlSlashes = (str) => {
+  return /\/\//.test(str);
+}
+//////////////////////////////

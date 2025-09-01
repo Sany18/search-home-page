@@ -1,10 +1,13 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <style>
     /* Light mode (default) */
     :root {
       --background: #fff;
+      --background-2: #f0f0f0;
+      --background-3: #e0e0e0;
       --foreground: #222;
       --input-bg: #f5f5f5;
       --input-border: #ccc;
@@ -18,6 +21,8 @@
     @media (prefers-color-scheme: dark) {
       :root {
         --background: #222;
+        --background-2: #2b2b2b;
+        --background-3: #303030;
         --foreground: #fff;
         --input-bg: #333;
         --input-border: #555;
@@ -27,103 +32,129 @@
         --comment: #aaa;
       }
     }
-    
+
     body {
+      color: var(--foreground);
       margin: 0;
-      height: 100svh;
-      padding: 1rem;
       display: flex;
       font-size: 16px;
+      max-height: 100svh;
       box-sizing: border-box;
       align-items: flex-start;
       font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
-      color: var(--foreground);
       background: var(--background);
     }
   </style>
-  
+
+  <script>
+    window.$ = (selector) => document.querySelector(selector);
+  </script>
+
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, interactive-widget=resizes-content">
   <link rel="shortcut icon" type="image/x-icon" href="favicon.ico">
-  
+
   <title>Search</title>
-  
+
   <link rel="stylesheet" href="styles.css">
   <script src="scripts.js" defer></script>
 </head>
 
 <body>
-  <div class="content">
-    <div class="flex-column gap-1">
+  <div id="content">
+    <div
+      id="first-column"
+      class="flex-column card">
       <div class="flex-column gap-1">
-        <h2>Google Search</h2>
-  
-        <form
-          class="flex gap-1 wrap"
-          action="https://www.google.com/search"
-          method="GET"
-          target="_blank"
-          autocomplete="off"
-          onsubmit="return handleGoogleSearch(event)">
-          <textarea
-            id="google-search-query-input"
-            name="q"
-            rows="2"
-            placeholder="Search Google..."
-            role="searchbox"
+        <div class="flex-space">
+          <h2>Google Search</h2>
+
+          <!-- <div class="menu-section">
+            <dialog id="menu-dialog">
+              <form class="flex-end" method="dialog">
+                <button>OK</button>
+              </form>
+            </dialog>
+
+            <button class="ghost" title="Keyboard shortcuts"
+              onclick="$('#menu-dialog').showModal()">
+              ⫶
+            </button>
+          </div> -->
+        </div>
+
+        <form class="flex gap-1 wrap" action="https://www.google.com/search" method="GET" target="_blank" autocomplete="off">
+          <textarea id="google-search-query-input" name="q" rows="2" placeholder="Search Google..." role="searchbox"
             aria-label="Search Google"></textarea>
-          <input type="hidden" id="udm-param" name="udm" value="14">
-  
+          <input type="hidden" id="google-search-udm-param" name="udm" value="14">
+
           <div class="flex gap-1">
             <button id="google-search-button" type="submit">Search</button>
             <button id="google-search-clear-input-button" type="button">Clear</button>
           </div>
         </form>
-  
+
         <div class="flex">
-          <input
-            id="exclude-rules-input"
-            type="text" 
-            name="exclude-rules-input"
-            placeholder="e.g. -ru, -и"
+          <input id="exclude-rules-input" type="text" name="exclude-rules-input" placeholder="e.g. -ru, -и"
             title="Enter exclusion rules, separated by commas">
           <button id="reset-filter-button" type="button">Reset</button>
         </div>
       </div>
-  
+
       <div class="history">
         <h2 class="pb-05">Search History</h2>
         <ol id="search-history-list"></ol>
       </div>
-
     </div>
-    
-    <div class="flex-column flex-1">
+
+    <div id="bookmarks-list" class="flex card flex-1">
+      <div
+        id="create-new-bookmark"
+        class="bookmark-cell">
+        <dialog id="create-new-bookmark-dialog">
+          <form method="dialog" class="flex-column gap-1">
+            <h3>Create New Bookmark</h3>
+
+            <div class="flex-column gap-1">
+              <input type="text" placeholder="Enter bookmark URL" required autocomplete="off" />
+              <input type="text" placeholder="Enter bookmark title" autocomplete="off" />
+            </div>
+
+            <div class="flex-end gap-1">
+              <button type="button" onclick="$('#create-new-bookmark-dialog').close()">Cancel</button>
+              <button type="submit">Save</button>
+            </div>
+          </form>
+        </dialog>
+
+        <button
+          id="create-new-bookmark-button"
+          class="ghost"
+          onclick="$('#create-new-bookmark-dialog').showModal()">
+          + Create Bookmark
+        </button>
+      </div>
     </div>
 
     <div class="help-section">
       <dialog id="help-dialog">
         <p class="comment mb-1">
-          <b>Enter</b> ------------------------ search<br/>
-          <b>Ctrl + Enter</b> ----------------- new line<br/>
-          Single-click on history line - fill input<br/>
-          Double-click on history line - search the line<br/>
+          <b>Enter</b> ------------------------ search<br />
+          <b>Ctrl + Enter</b> ----------------- new line<br />
+          Single-click on history line - fill input<br />
+          Double-click on history line - search the line<br />
         </p>
 
-        <form
-          class="flex-end"
-          method="dialog">
+        <form class="flex-end" method="dialog">
           <button>OK</button>
         </form>
       </dialog>
 
-      <button
-        class="help"
-        title="Keyboard shortcuts"
-        onclick="document.getElementById('help-dialog').showModal()">
+      <button class="help" title="Keyboard shortcuts" onclick="$('#help-dialog').showModal()">
         ?
       </button>
     </div>
   </div>
 </body>
+
 </html>
