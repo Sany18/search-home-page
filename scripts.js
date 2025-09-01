@@ -3,56 +3,91 @@ const EXCLUDE_RULES_KEY = 'excludeRules';
 const DEFAULT_EXCLUDE_RULES = '-ru -и -ы';
 const MAX_HISTORY = 100;
 
+const elementNames = {
+  searchInput: '#google-search-query-input',
+  searchButton: '#google-search-button',
+  clearInputButton: '#google-search-clear-input-button',
+  udmFormParam: '#google-search-udm-param',
+
+  excludeRulesInput: '#exclude-rules-input',
+  resetFilterButton: '#reset-filter-button',
+  
+  historyList: '#search-history-list'
+}
+
 document.addEventListener('DOMContentLoaded', function () {
-  const queryInput = document.querySelector('.search-query-input');
-  const searchButton = document.querySelector('.search-button');
-  const historyList = document.getElementById('search-history-list');
-  const clearInputButton = document.querySelector('.clear-input-button');
-  const udmFormParam = document.getElementById('udm-param');
-  const excludeRulesInput = document.getElementById('exclude-rules-input');
-  const resetFilterButton = document.querySelector('.reset-filter-button');
+  //////////////////////////////
+  // Search input, buttons
+  const queryInput = document.querySelector(elementNames.searchInput);
+  const searchButton = document.querySelector(elementNames.searchButton);
+  const udmFormParam = document.querySelector(elementNames.udmFormParam);
+  const clearInputButton = document.querySelector(elementNames.clearInputButton);
+
+  // Search input
+  queryInput.addEventListener('keydown', (e) => {
+    if (e.ctrlKey && e.key === 'Enter') {
+      // Add new line to textarea
+      e.preventDefault();
+      const textarea = e.target;
+      const start = textarea.selectionStart;
+      const end = textarea.selectionEnd;
+      textarea.value = textarea.value.substring(0, start) + "\n" + textarea.value.substring(end);
+      textarea.selectionStart = textarea.selectionEnd = start + 1;
+    } else if (e.key === 'Enter') {
+      // Open search in new tab
+      e.preventDefault();
+      searchButton.click();
+    }
+  });
+
+  // Search button
+  const updateSearchButtonState = () => {
+    searchButton.disabled = !queryInput.value.trim();
+  }
+  
+  searchButton.addEventListener('click', (e) => {
+    // Get fresh value
+    const _excludeRulesInput = document.querySelector(elementNames.excludeRulesInput);
+    const excludeRulesValue = _excludeRulesInput.value.replace(/ /g, '+');
+    const query = queryInput.value;
+    addToHistory(query);
+    const udm = udmFormParam.value;
+    // Build the Google search URL with extra params
+    const searchUrl = `https://www.google.com/search?q=${encodeURIComponent(query)}+${excludeRulesValue}&udm=${encodeURIComponent(udm)}`;
+    window.open(searchUrl, '_blank');
+    queryInput.value = '';
+    updateSearchButtonState();
+  });
+
+  queryInput.addEventListener('input', updateSearchButtonState);
+
+  clearInputButton.addEventListener('click', () => {
+    queryInput.value = '';
+    updateSearchButtonState();
+  });
+  //////////////////////////////
+  
+  //////////////////////////////
+  // Exclude rules
+  const excludeRulesInput = document.querySelector(elementNames.excludeRulesInput);
 
   excludeRulesInput.value = localStorage.getItem(EXCLUDE_RULES_KEY) || DEFAULT_EXCLUDE_RULES;
   excludeRulesInput.addEventListener('input', () => {
     localStorage.setItem(EXCLUDE_RULES_KEY, excludeRulesInput.value);
   });
 
+  // Reset button
+  const resetFilterButton = document.querySelector(elementNames.resetFilterButton);
+
   resetFilterButton.addEventListener('click', () => {
     excludeRulesInput.value = DEFAULT_EXCLUDE_RULES;
     localStorage.setItem(EXCLUDE_RULES_KEY, DEFAULT_EXCLUDE_RULES);
   });
+  //////////////////////////////
 
-  // Enable/disable search button based on textarea value;
-  const updateSearchButtonState = () => {
-    searchButton.disabled = !queryInput.value.trim();
-  }
-
-  queryInput.addEventListener('input', updateSearchButtonState);
-
-  // Search history logic
-  const getHistory = () => {
-    return JSON.parse(localStorage.getItem(HISTORY_KEY) || '[]');
-  }
-
-  const saveHistory = (history) => {
-    localStorage.setItem(HISTORY_KEY, JSON.stringify(history));
-  }
-
-  const addToHistory = (query) => {
-    let history = getHistory();
-    history = history.filter(item => item !== query);
-    history.unshift(query);
-    if (history.length > MAX_HISTORY) history = history.slice(0, MAX_HISTORY);
-    saveHistory(history);
-    renderHistory();
-  }
-
-  const removeFromHistory = (index) => {
-    let history = getHistory();
-    history.splice(index, 1);
-    saveHistory(history);
-    renderHistory();
-  }
+  //////////////////////////////
+  // Search history
+  const historyList = document.querySelector(elementNames.historyList);
 
   const renderHistory = () => {
     historyList.innerHTML = '';
@@ -71,9 +106,7 @@ document.addEventListener('DOMContentLoaded', function () {
         updateSearchButtonState();
       };
 
-      contentDiv.ondblclick = () => {
-        console.log(searchButton);
-        
+      contentDiv.ondblclick = () => {        
         searchButton.click();
       };
 
@@ -97,42 +130,30 @@ document.addEventListener('DOMContentLoaded', function () {
     });
   }
 
-  // Search logic
-  searchButton.addEventListener('click', (e) => {
-    e.preventDefault();
-    
-    const _excludeRulesInput = document.getElementById('exclude-rules-input');
-    const excludeRulesValue = _excludeRulesInput.value.replace(/ /g, '+');
-    const query = queryInput.value;
-    addToHistory(query);
-    const udm = udmFormParam.value;
-    // Build the Google search URL with extra params
-    const searchUrl = `https://www.google.com/search?q=${encodeURIComponent(query)}+${excludeRulesValue}&udm=${encodeURIComponent(udm)}`;
-    window.open(searchUrl, '_blank');
-    queryInput.value = '';
-    updateSearchButtonState();
-  });
+  const getHistory = () => {
+    return JSON.parse(localStorage.getItem(HISTORY_KEY) || '[]');
+  }
 
-  clearInputButton.addEventListener('click', () => {
-    queryInput.value = '';
-    updateSearchButtonState();
-  });
+  const saveHistory = (history) => {
+    localStorage.setItem(HISTORY_KEY, JSON.stringify(history));
+  }
 
-  queryInput.addEventListener('keydown', (e) => {
-    if (e.ctrlKey && e.key === 'Enter') {
-      // Add new line to textarea
-      e.preventDefault();
-      const textarea = e.target;
-      const start = textarea.selectionStart;
-      const end = textarea.selectionEnd;
-      textarea.value = textarea.value.substring(0, start) + "\n" + textarea.value.substring(end);
-      textarea.selectionStart = textarea.selectionEnd = start + 1;
-    } else if (e.key === 'Enter') {
-      // Open search in new tab
-      e.preventDefault();
-      searchButton.click();
-    }
-  });
+  const addToHistory = (query) => {
+    let history = getHistory();
+    history = history.filter(item => item !== query);
+    history.unshift(query);
+    if (history.length > MAX_HISTORY) history = history.slice(0, MAX_HISTORY);
+    saveHistory(history);
+    renderHistory();
+  }
+
+  const removeFromHistory = (index) => {
+    let history = getHistory();
+    history.splice(index, 1);
+    saveHistory(history);
+    renderHistory();
+  }
+  //////////////////////////////
 
   renderHistory();
   updateSearchButtonState();

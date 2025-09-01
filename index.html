@@ -59,7 +59,6 @@
         <h2>Google Search</h2>
   
         <form
-          id="google-search-form"
           class="flex gap-1 wrap"
           action="https://www.google.com/search"
           method="GET"
@@ -67,28 +66,28 @@
           autocomplete="off"
           onsubmit="return handleGoogleSearch(event)">
           <textarea
+            id="google-search-query-input"
             name="q"
             rows="2"
-            class="search-query-input"
             placeholder="Search Google..."
             role="searchbox"
             aria-label="Search Google"></textarea>
           <input type="hidden" id="udm-param" name="udm" value="14">
   
           <div class="flex gap-1">
-            <button class="search-button" type="submit">Search</button>
-            <button class="clear-input-button" type="button">Clear</button>
+            <button id="google-search-button" type="submit">Search</button>
+            <button id="google-search-clear-input-button" type="button">Clear</button>
           </div>
         </form>
   
         <div class="flex">
           <input
+            id="exclude-rules-input"
             type="text" 
             name="exclude-rules-input"
-            id="exclude-rules-input"
             placeholder="e.g. -ru, -и"
             title="Enter exclusion rules, separated by commas">
-          <button class="reset-filter-button" type="submit">Reset</button>
+          <button id="reset-filter-button" type="button">Reset</button>
         </div>
       </div>
   
@@ -96,15 +95,16 @@
         <h2 class="pb-05">Search History</h2>
         <ol id="search-history-list"></ol>
       </div>
-    </div>
-  
-    <div class="flex-column flex-1">
+
       <p class="comment">
         <b>Enter</b> ------------------------ search<br/>
         <b>Ctrl + Enter</b> ----------------- new line<br/>
         Single-click on history line - fill input<br/>
         Double-click on history line - search the line<br/>
       </p>
+    </div>
+  
+    <div class="flex-column flex-1">
     </div>
   </div>
 </body>
