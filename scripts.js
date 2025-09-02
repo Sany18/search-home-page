@@ -185,7 +185,7 @@ document.addEventListener('DOMContentLoaded', function () {
           const payload = Array.from(e.target.querySelectorAll('input')).map(input => input.value.trim());
           const newBookmark = {
             url: payload[0],
-            title: payload[1],
+            title: itHasUrlSlashes(payload[1]) ? payload[1] : `http://${payload[1]}`,
             icon: getSiteIcon(payload[0])
           };
 
@@ -211,7 +211,7 @@ document.addEventListener('DOMContentLoaded', function () {
     bookmarks.forEach((item, idx) => {
       const bookmarkCell = document.createElement('a');
       bookmarkCell.className = 'bookmark-cell';
-      bookmarkCell.href = itHasUrlSlashes(item.url) ? item.url : `http://${item.url}`;
+      bookmarkCell.href = item.url;
       bookmarkCell.title = item.url;
       bookmarkCell.target = '_blank';
       
