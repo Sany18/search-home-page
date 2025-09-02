@@ -183,11 +183,10 @@ document.addEventListener('DOMContentLoaded', function () {
           e.preventDefault();
 
           const payload = Array.from(e.target.querySelectorAll('input')).map(input => input.value.trim());
-          const newBookmark = {
-            url: payload[0],
-            title: itHasUrlSlashes(payload[1]) ? payload[1] : `http://${payload[1]}`,
-            icon: getSiteIcon(payload[0])
-          };
+          const url = itHasUrlSlashes(payload[0]) ? payload[0] : `https://${payload[0]}`;
+          const icon = getSiteIcon(url);
+          const title = payload[1] || trimProtocol(payload[0]);
+          const newBookmark = { url, title, icon };
 
           addBookmark(newBookmark);
           subscribeToCreateNewBookmark();
@@ -292,5 +291,9 @@ if (window.visualViewport) {
 
 const itHasUrlSlashes = (str) => {
   return /\/\//.test(str);
+}
+
+const trimProtocol = (url) => {
+  return url.replace(/^(https?:\/\/)?(www\.)?/, '');
 }
 //////////////////////////////
