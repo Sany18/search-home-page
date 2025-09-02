@@ -130,11 +130,6 @@ document.addEventListener('DOMContentLoaded', function () {
         removeFromHistory(idx);
       };
 
-      delBtn.ondblclick = (e) => {
-        e.preventDefault();
-        e.stopPropagation();
-      };
-
       contentDiv.appendChild(delBtn);
       li.appendChild(contentDiv);
       historyList.appendChild(li);
