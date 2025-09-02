@@ -19,8 +19,9 @@ const elementIds = {
 
   // Section 2
   bookmarksList: '#bookmarks-list',
-  createNewBookmarkButton: '#create-new-bookmark-button',
-  createNewBookmark: '#create-new-bookmark',
+  newBookmark: '#new-bookmark',
+  newBookmarkButton: '#create-new-bookmark-button',
+  newBookmarkDialog: '#create-new-bookmark-dialog'
 }
 
 document.addEventListener('DOMContentLoaded', function () {
@@ -170,22 +171,30 @@ document.addEventListener('DOMContentLoaded', function () {
   //////////////////////////////
   // Bookmarks
   const bookmarksList = $(elementIds.bookmarksList);
-  const createNewBookmark = $(elementIds.createNewBookmark);
+  const newBookmarkEl = $(elementIds.newBookmark);
 
   const subscribeToCreateNewBookmark = () => {
     setTimeout(() => {
       const createNewBookmarkSubscriptions = () => {
-        const createNewBookmarkEl = $(elementIds.createNewBookmark);
-        const submitButtonEl = createNewBookmarkEl.querySelector('button[type="submit"]');
-  
-        submitButtonEl.addEventListener('click', () => {
-          const payload = Array.from(createNewBookmarkEl.querySelectorAll('input')).map(input => input.value.trim());
-          addBookmark(payload);
+        const newBookmarkDialogEl = $(elementIds.newBookmarkDialog);
+        const submitFormEl = newBookmarkDialogEl.querySelector('form');
+
+        submitFormEl.addEventListener('submit', (e) => {
+          e.preventDefault();
+
+          const payload = Array.from(e.target.querySelectorAll('input')).map(input => input.value.trim());
+          const newBookmark = {
+            url: payload[0],
+            title: payload[1],
+            icon: getSiteIcon(payload[0])
+          };
+
+          addBookmark(newBookmark);
           subscribeToCreateNewBookmark();
         });
       }
       
-      $(elementIds.createNewBookmarkButton).addEventListener('click', () => {
+      $(elementIds.newBookmarkButton).addEventListener('click', () => {
         createNewBookmarkSubscriptions();
       });
     }, 0);
@@ -195,19 +204,24 @@ document.addEventListener('DOMContentLoaded', function () {
 
   const renderBookmarks = () => {
     bookmarksList.innerHTML = '';
-    bookmarksList.innerHTML = createNewBookmark.outerHTML;
+    bookmarksList.innerHTML = newBookmarkEl.outerHTML;
 
     const bookmarks = getBookmarks();
 
     bookmarks.forEach((item, idx) => {
       const bookmarkCell = document.createElement('a');
       bookmarkCell.className = 'bookmark-cell';
-      bookmarkCell.href = itHasUrlSlashes(item[0]) ? item[0] : `http://${item[0]}`;
+      bookmarkCell.href = itHasUrlSlashes(item.url) ? item.url : `http://${item.url}`;
+      bookmarkCell.title = item.url;
       bookmarkCell.target = '_blank';
       
       const textEl = document.createElement('div');
       textEl.className = 'bookmark-text';
-      textEl.innerText = item[1] || item[0];
+      textEl.innerText = item.title || item.url;
+
+      const iconEl = document.createElement('img');
+      iconEl.className = 'bookmark-icon';
+      iconEl.src = item.icon;
 
       // Delete button
       const delBtn = document.createElement('button');
@@ -219,6 +233,7 @@ document.addEventListener('DOMContentLoaded', function () {
         removeFromBookmarks(idx);
       };
 
+      if (item.icon) bookmarkCell.appendChild(iconEl);
       bookmarkCell.appendChild(textEl);
       bookmarkCell.appendChild(delBtn);
       bookmarksList.appendChild(bookmarkCell);
@@ -240,11 +255,27 @@ document.addEventListener('DOMContentLoaded', function () {
     renderBookmarks();
   }
 
-  const addBookmark = (payload) => {
+  const addBookmark = (newBookmark) => {
     let bookmarks = getBookmarks();
-    bookmarks.push(payload);
+    bookmarks.push(newBookmark);
     saveBookmarks(bookmarks);
     renderBookmarks();
+  }
+
+  // const editBookmark = (index, newData) => {
+  //   let bookmarks = getBookmarks();
+  //   bookmarks[index] = newData;
+  //   saveBookmarks(bookmarks);
+  //   renderBookmarks();
+  // }
+
+  const getSiteIcon = (url) => {
+    try {
+      const hostname = new URL(url).hostname;
+      return `https://www.google.com/s2/favicons?domain=${hostname}`;
+    } catch {
+      return '';
+    }
   }
 
   renderBookmarks();

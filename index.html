@@ -108,20 +108,18 @@
     </div>
 
     <div id="bookmarks-list" class="flex card flex-1">
-      <div
-        id="create-new-bookmark"
-        class="bookmark-cell">
+      <div id="new-bookmark">
         <dialog id="create-new-bookmark-dialog">
-          <form method="dialog" class="flex-column gap-1">
+          <form class="flex-column gap-1">
             <h3>Create New Bookmark</h3>
-
+  
             <div class="flex-column gap-1">
               <input type="text" placeholder="Enter bookmark URL" required autocomplete="off" />
               <input type="text" placeholder="Enter bookmark title" autocomplete="off" />
             </div>
-
+  
             <div class="flex-end gap-1">
-              <button type="button" onclick="$('#create-new-bookmark-dialog').close()">Cancel</button>
+              <button type="button" onclick="$('#create-new-bookmark-dialog').close(); event.stopPropagation();">Cancel</button>
               <button type="submit">Save</button>
             </div>
           </form>
@@ -129,7 +127,7 @@
 
         <button
           id="create-new-bookmark-button"
-          class="ghost"
+          class="bookmark-cell"
           onclick="$('#create-new-bookmark-dialog').showModal()">
           + Create Bookmark
         </button>
