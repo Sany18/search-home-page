@@ -63,7 +63,7 @@ document.addEventListener('DOMContentLoaded', function () {
     const udm = udmFormParam.value;
     // Build the Google search URL with extra params
     const searchUrl = `https://www.google.com/search?q=${encodeURIComponent(query)}+${excludeRulesValue}&udm=${encodeURIComponent(udm)}`;
-    window.open(searchUrl, '_blank');
+    window.open(searchUrl);
     queryInput.value = '';
     updateSearchButtonState();
   });
@@ -207,7 +207,6 @@ document.addEventListener('DOMContentLoaded', function () {
       bookmarkCell.className = 'bookmark-cell';
       bookmarkCell.href = item.url;
       bookmarkCell.title = item.url;
-      bookmarkCell.target = '_blank';
       
       const textEl = document.createElement('div');
       textEl.className = 'bookmark-text';
