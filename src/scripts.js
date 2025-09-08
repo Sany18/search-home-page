@@ -170,33 +170,45 @@ document.addEventListener('DOMContentLoaded', function () {
   const bookmarksList = $(elementIds.bookmarksList);
   const newBookmarkEl = $(elementIds.newBookmark);
 
-  const subscribeToCreateNewBookmark = () => {
+  const newBookmarkSubmit = (e) => {
+    e.preventDefault();
+
+    const payload = Array.from(e.target.querySelectorAll('input')).map(input => input.value.trim());
+    const url = itHasUrlSlashes(payload[0]) ? payload[0] : `https://${payload[0]}`;
+    const icon = getSiteIcon(url);
+    const title = payload[1] || trimProtocol(payload[0]);
+    const newBookmark = { url, title, icon };
+
+    addBookmark(newBookmark);
+
+    // Create new form subscriptions for the new dialog
     setTimeout(() => {
-      const createNewBookmarkSubscriptions = () => {
-        const newBookmarkDialogEl = $(elementIds.newBookmarkDialog);
-        const submitFormEl = newBookmarkDialogEl.querySelector('form');
-
-        submitFormEl.addEventListener('submit', (e) => {
-          e.preventDefault();
-
-          const payload = Array.from(e.target.querySelectorAll('input')).map(input => input.value.trim());
-          const url = itHasUrlSlashes(payload[0]) ? payload[0] : `https://${payload[0]}`;
-          const icon = getSiteIcon(url);
-          const title = payload[1] || trimProtocol(payload[0]);
-          const newBookmark = { url, title, icon };
-
-          addBookmark(newBookmark);
-          subscribeToCreateNewBookmark();
-        });
-      }
-      
       $(elementIds.newBookmarkButton).addEventListener('click', () => {
-        createNewBookmarkSubscriptions();
+        createNewBookmarkFormSubscriptions()
       });
     }, 0);
   }
 
-  subscribeToCreateNewBookmark();
+  const newBookmarkCancel = (e) => {
+    e.preventDefault();
+    $(elementIds.newBookmarkDialog).close();
+  }
+
+  const createNewBookmarkFormSubscriptions = () => {
+    $(elementIds.newBookmarkDialog)
+      .querySelector('form')
+      .addEventListener('submit', newBookmarkSubmit);
+
+    $(elementIds.newBookmarkDialog)
+      .querySelector('button.cancel')
+      .addEventListener('click', newBookmarkCancel);
+  }
+
+  setTimeout(() => {
+    $(elementIds.newBookmarkButton).addEventListener('click', () => {
+      createNewBookmarkFormSubscriptions()
+    });
+  }, 0);
 
   const renderBookmarks = () => {
     bookmarksList.innerHTML = '';
@@ -209,7 +221,7 @@ document.addEventListener('DOMContentLoaded', function () {
       bookmarkCell.className = 'bookmark-cell';
       bookmarkCell.href = item.url;
       bookmarkCell.title = item.url;
-      
+
       const textEl = document.createElement('div');
       textEl.className = 'bookmark-text';
       textEl.innerText = item.title || item.url;

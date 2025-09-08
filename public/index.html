@@ -107,7 +107,9 @@
     <div id="bookmarks-list" class="flex card flex-1">
       <div id="new-bookmark">
         <dialog id="create-new-bookmark-dialog">
-          <form class="flex-column gap-1">
+          <form
+            class="flex-column gap-1"
+            method="dialog">
             <h3>Create New Bookmark</h3>
   
             <div class="flex-column gap-1">
@@ -116,7 +118,7 @@
             </div>
   
             <div class="flex-end gap-1">
-              <button type="button" onclick="$('#create-new-bookmark-dialog').close(); event.stopPropagation();">Cancel</button>
+              <button type="button" class="cancel">Cancel</button>
               <button type="submit">Save</button>
             </div>
           </form>
