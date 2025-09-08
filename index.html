@@ -1,0 +1,41 @@
+<!doctype html><html lang="en"><head><style>/* Light mode (default) */
+    :root {
+      --background: #fff;
+      --background-2: #f0f0f0;
+      --background-3: #e0e0e0;
+      --foreground: #222;
+      --input-bg: #f5f5f5;
+      --input-border: #ccc;
+      --button-bg: #e0e0e0;
+      --button-fg: #222;
+      --alert: #af0012;
+      --comment: #555;
+    }
+
+    /* Dark mode */
+    @media (prefers-color-scheme: dark) {
+      :root {
+        --background: #222;
+        --background-2: #2b2b2b;
+        --background-3: #303030;
+        --foreground: #fff;
+        --input-bg: #333;
+        --input-border: #555;
+        --button-bg: #444;
+        --button-fg: #fff;
+        --alert: #af0012;
+        --comment: #aaa;
+      }
+    }
+
+    body {
+      color: var(--foreground);
+      margin: 0;
+      display: flex;
+      font-size: 16px;
+      max-height: 100svh;
+      box-sizing: border-box;
+      align-items: flex-start;
+      font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+      background: var(--background);
+    }</style><script>window.$ = (selector) => document.querySelector(selector);</script><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1,interactive-widget=resizes-content"><link rel="shortcut icon" type="image/x-icon" href="favicon.ico"><title>Search</title></head><body><div id="content"><div id="first-column" class="flex-column card"><div class="flex-column gap-1"><div class="flex-space"><h2>Google Search</h2></div><form class="flex gap-1 wrap" action="https://www.google.com/search" autocomplete="off"><textarea id="google-search-query-input" name="q" rows="2" placeholder="Search Google..." role="searchbox" aria-label="Search Google"></textarea> <input type="hidden" id="google-search-udm-param" name="udm" value="14"><div class="flex gap-1"><button id="google-search-button" type="submit">Search</button> <button id="google-search-clear-input-button" type="button">Clear</button></div></form><div class="flex"><input id="exclude-rules-input" name="exclude-rules-input" placeholder="e.g. -ru, -и" title="Enter exclusion rules, separated by commas"> <button id="reset-filter-button" type="button">Reset</button></div></div><div class="history"><h2 class="pb-05">Search History</h2><ol id="search-history-list"></ol></div></div><div id="bookmarks-list" class="flex card flex-1"><div id="new-bookmark"><dialog id="create-new-bookmark-dialog"><form class="flex-column gap-1" method="dialog"><h3>Create New Bookmark</h3><div class="flex-column gap-1"><input placeholder="Enter bookmark URL" required autocomplete="off"/> <input placeholder="Enter bookmark title" autocomplete="off"/></div><div class="flex-end gap-1"><button type="button" class="cancel">Cancel</button> <button type="submit">Save</button></div></form></dialog><button id="create-new-bookmark-button" class="bookmark-cell" onclick="$('#create-new-bookmark-dialog').showModal()">+ Create Bookmark</button></div></div><div class="help-section"><dialog id="help-dialog"><p class="comment mb-1"><b>Enter</b> ------------------------ search<br/><b>Ctrl + Enter</b> ----------------- new line<br/>Single-click on history line - fill input<br/>Double-click on history line - search the line<br/></p><form class="flex-end" method="dialog"><button>OK</button></form></dialog><button class="help" title="Keyboard shortcuts" onclick="$('#help-dialog').showModal()">?</button></div></div><script defer="defer" src="bundle.js"></script></body></html>
