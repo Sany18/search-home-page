@@ -1,3 +1,5 @@
+import './styles.css';
+
 const HISTORY_KEY = 'searchHistory';
 const BOOKMARKS_KEY = 'bookmarks';
 const EXCLUDE_RULES_KEY = 'excludeRules';
@@ -63,7 +65,7 @@ document.addEventListener('DOMContentLoaded', function () {
     const udm = udmFormParam.value;
     // Build the Google search URL with extra params
     const searchUrl = `https://www.google.com/search?q=${encodeURIComponent(query)}+${excludeRulesValue}&udm=${encodeURIComponent(udm)}`;
-    window.open(searchUrl);
+    window.location.href = searchUrl;
     queryInput.value = '';
     updateSearchButtonState();
   });

@@ -1,0 +1,15 @@
+{
+	"version": "2.0.0",
+	"tasks": [
+		{
+			"label": "webpack build",
+			"type": "shell",
+			"command": "npm run build"
+		},
+		{
+			"label": "webpack build",
+			"type": "shell",
+			"command": "npm run build"
+		}
+	]
+}
