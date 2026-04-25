@@ -3,8 +3,83 @@ import './styles.css';
 const HISTORY_KEY = 'searchHistory';
 const BOOKMARKS_KEY = 'bookmarks';
 const EXCLUDE_RULES_KEY = 'excludeRules';
+const LOCALE_KEY = 'locale';
 const DEFAULT_EXCLUDE_RULES = '-ru -и -ы';
-const MAX_HISTORY = 100;
+const DEFAULT_LOCALE = 'uk';
+const MAX_HISTORY = 200;
+
+const i18n = {
+  en: {
+    pageTitle: 'Search',
+    googleSearch: 'Google Search',
+    searchPlaceholder: 'Search Google...',
+    searchBtn: 'Search',
+    clearBtn: 'Clear',
+    excludePlaceholder: 'e.g. -ru -и',
+    excludeTitle: 'Exclusion rules, space-separated',
+    resetBtn: 'Reset',
+    searchHistory: 'Search History',
+    newBookmarkBtn: '+ New Bookmark',
+    newBookmarkDialogTitle: 'New Bookmark',
+    urlPlaceholder: 'URL',
+    titlePlaceholder: 'Title (optional)',
+    cancelBtn: 'Cancel',
+    saveBtn: 'Save',
+    helpContent: '<b>Enter</b> ——————— search<br><b>Ctrl+Enter</b> ——— new line<br>Click history — fill input<br>Dbl-click history — search',
+    okBtn: 'OK',
+    themeAuto: 'Auto',
+    themeLight: 'Light',
+    themeDark: 'Dark',
+    themeSynthwave: 'Synthwave',
+  },
+  uk: {
+    pageTitle: 'Пошук',
+    googleSearch: 'Пошук Google',
+    searchPlaceholder: 'Пошук в Google...',
+    searchBtn: 'Знайти',
+    clearBtn: 'Очистити',
+    excludePlaceholder: 'напр. -ru -ру',
+    excludeTitle: 'Правила виключення через пробіл',
+    resetBtn: 'Скинути',
+    searchHistory: 'Історія пошуку',
+    newBookmarkBtn: '+ Закладка',
+    newBookmarkDialogTitle: 'Нова закладка',
+    urlPlaceholder: 'URL',
+    titlePlaceholder: 'Назва (необовʼязково)',
+    cancelBtn: 'Скасувати',
+    saveBtn: 'Зберегти',
+    helpContent: '<b>Enter</b> ——————— пошук<br><b>Ctrl+Enter</b> ——— новий рядок<br>Клік — заповнити поле<br>Подвійний клік — пошук',
+    okBtn: 'OK',
+    themeAuto: 'Авто',
+    themeLight: 'Світла',
+    themeDark: 'Темна',
+    themeSynthwave: 'Синтвейв',
+  }
+};
+
+const applyLocale = (lang) => {
+  const strings = i18n[lang] || i18n[DEFAULT_LOCALE];
+  document.title = strings.pageTitle;
+
+  document.querySelectorAll('[data-i18n]').forEach(el => {
+    el.textContent = strings[el.dataset.i18n];
+  });
+  document.querySelectorAll('[data-i18n-html]').forEach(el => {
+    el.innerHTML = strings[el.dataset.i18nHtml];
+  });
+  document.querySelectorAll('[data-i18n-placeholder]').forEach(el => {
+    el.placeholder = strings[el.dataset.i18nPlaceholder];
+  });
+  document.querySelectorAll('[data-i18n-title]').forEach(el => {
+    el.title = strings[el.dataset.i18nTitle];
+  });
+
+  document.querySelectorAll('[data-lang-btn]').forEach(btn => {
+    btn.classList.toggle('active', btn.dataset.langBtn === lang);
+  });
+
+  localStorage.setItem(LOCALE_KEY, lang);
+};
 
 const elementIds = {
   content: '#content',
@@ -168,51 +243,33 @@ document.addEventListener('DOMContentLoaded', function () {
   //////////////////////////////
   // Bookmarks
   const bookmarksList = $(elementIds.bookmarksList);
-  const newBookmarkEl = $(elementIds.newBookmark);
 
-  const newBookmarkSubmit = (e) => {
-    e.preventDefault();
+  $(elementIds.newBookmarkDialog)
+    .querySelector('form')
+    .addEventListener('submit', (e) => {
+      e.preventDefault();
 
-    const payload = Array.from(e.target.querySelectorAll('input')).map(input => input.value.trim());
-    const url = itHasUrlSlashes(payload[0]) ? payload[0] : `https://${payload[0]}`;
-    const icon = getSiteIcon(url);
-    const title = payload[1] || trimProtocol(payload[0]);
-    const newBookmark = { url, title, icon };
+      const payload = Array.from(e.target.querySelectorAll('input')).map(input => input.value.trim());
+      const url = itHasUrlSlashes(payload[0]) ? payload[0] : `https://${payload[0]}`;
+      const icon = getSiteIcon(url);
+      const title = payload[1] || trimProtocol(payload[0]);
 
-    addBookmark(newBookmark);
-
-    // Create new form subscriptions for the new dialog
-    setTimeout(() => {
-      $(elementIds.newBookmarkButton).addEventListener('click', () => {
-        createNewBookmarkFormSubscriptions()
-      });
-    }, 0);
-  }
-
-  const newBookmarkCancel = (e) => {
-    e.preventDefault();
-    $(elementIds.newBookmarkDialog).close();
-  }
-
-  const createNewBookmarkFormSubscriptions = () => {
-    $(elementIds.newBookmarkDialog)
-      .querySelector('form')
-      .addEventListener('submit', newBookmarkSubmit);
-
-    $(elementIds.newBookmarkDialog)
-      .querySelector('button.cancel')
-      .addEventListener('click', newBookmarkCancel);
-  }
-
-  setTimeout(() => {
-    $(elementIds.newBookmarkButton).addEventListener('click', () => {
-      createNewBookmarkFormSubscriptions()
+      $(elementIds.newBookmarkDialog).close();
+      e.target.reset();
+      addBookmark({ url, title, icon });
     });
-  }, 0);
+
+  $(elementIds.newBookmarkDialog)
+    .querySelector('button.cancel')
+    .addEventListener('click', (e) => {
+      e.preventDefault();
+      $(elementIds.newBookmarkDialog).close();
+    });
 
   const renderBookmarks = () => {
-    bookmarksList.innerHTML = '';
-    bookmarksList.innerHTML = newBookmarkEl.outerHTML;
+    Array.from(bookmarksList.children).forEach(child => {
+      if (child.id !== 'new-bookmark') child.remove();
+    });
 
     const bookmarks = getBookmarks();
 
@@ -286,6 +343,41 @@ document.addEventListener('DOMContentLoaded', function () {
   }
 
   renderBookmarks();
+  //////////////////////////////
+
+  //////////////////////////////
+  // Theme switcher
+  const THEME_KEY = 'theme';
+
+  const setTheme = (theme) => {
+    if (theme) {
+      document.documentElement.dataset.theme = theme;
+      localStorage.setItem(THEME_KEY, theme);
+    } else {
+      delete document.documentElement.dataset.theme;
+      localStorage.removeItem(THEME_KEY);
+    }
+    document.querySelectorAll('[data-theme-btn]').forEach(btn => {
+      btn.classList.toggle('active', btn.dataset.themeBtn === (theme || 'auto'));
+    });
+  };
+
+  document.querySelectorAll('[data-theme-btn]').forEach(btn => {
+    btn.addEventListener('click', () => {
+      setTheme(btn.dataset.themeBtn === 'auto' ? null : btn.dataset.themeBtn);
+    });
+  });
+
+  setTheme(localStorage.getItem(THEME_KEY) || null);
+  //////////////////////////////
+
+  //////////////////////////////
+  // Locale
+  document.querySelectorAll('[data-lang-btn]').forEach(btn => {
+    btn.addEventListener('click', () => applyLocale(btn.dataset.langBtn));
+  });
+
+  applyLocale(localStorage.getItem(LOCALE_KEY) || DEFAULT_LOCALE);
   //////////////////////////////
 });
 
