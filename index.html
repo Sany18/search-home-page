@@ -1,0 +1,104 @@
+<!doctype html><html lang="en"><head><style>/* Light (default) */
+    :root {
+      --background: #ffffff;
+      --background-2: #f3f4f6;
+      --background-3: #e5e7eb;
+      --foreground: #111827;
+      --input-bg: #f9fafb;
+      --input-border: #d1d5db;
+      --button-bg: #e5e7eb;
+      --button-fg: #374151;
+      --accent: #2563eb;
+      --accent-fg: #ffffff;
+      --alert: #dc2626;
+      --comment: #6b7280;
+      --card-shadow: 0 1px 3px rgba(0,0,0,0.07), 0 0 0 1px rgba(0,0,0,0.06);
+      --focus-shadow: 0 0 0 3px rgba(37,99,235,0.22);
+    }
+
+    /* Auto dark */
+    @media (prefers-color-scheme: dark) {
+      :root:not([data-theme]) {
+        --background: #111827;
+        --background-2: #1f2937;
+        --background-3: #374151;
+        --foreground: #f9fafb;
+        --input-bg: #1f2937;
+        --input-border: #374151;
+        --button-bg: #374151;
+        --button-fg: #f3f4f6;
+        --accent: #60a5fa;
+        --accent-fg: #0c1e42;
+        --alert: #f87171;
+        --comment: #9ca3af;
+        --card-shadow: 0 1px 3px rgba(0,0,0,0.5), 0 0 0 1px rgba(255,255,255,0.05);
+        --focus-shadow: 0 0 0 3px rgba(96,165,250,0.25);
+      }
+    }
+
+    [data-theme="light"] {
+      --background: #ffffff;
+      --background-2: #f3f4f6;
+      --background-3: #e5e7eb;
+      --foreground: #111827;
+      --input-bg: #f9fafb;
+      --input-border: #d1d5db;
+      --button-bg: #e5e7eb;
+      --button-fg: #374151;
+      --accent: #2563eb;
+      --accent-fg: #ffffff;
+      --alert: #dc2626;
+      --comment: #6b7280;
+      --card-shadow: 0 1px 3px rgba(0,0,0,0.07), 0 0 0 1px rgba(0,0,0,0.06);
+      --focus-shadow: 0 0 0 3px rgba(37,99,235,0.22);
+    }
+
+    [data-theme="dark"] {
+      --background: #111827;
+      --background-2: #1f2937;
+      --background-3: #374151;
+      --foreground: #f9fafb;
+      --input-bg: #1f2937;
+      --input-border: #374151;
+      --button-bg: #374151;
+      --button-fg: #f3f4f6;
+      --accent: #60a5fa;
+      --accent-fg: #0c1e42;
+      --alert: #f87171;
+      --comment: #9ca3af;
+      --card-shadow: 0 1px 3px rgba(0,0,0,0.5), 0 0 0 1px rgba(255,255,255,0.05);
+      --focus-shadow: 0 0 0 3px rgba(96,165,250,0.25);
+    }
+
+    [data-theme="synthwave"] {
+      --background: #0d0221;
+      --background-2: #160535;
+      --background-3: #2d1b4e;
+      --foreground: #f5e0ff;
+      --input-bg: #160535;
+      --input-border: #7c3aed;
+      --button-bg: #2d1b4e;
+      --button-fg: #f5e0ff;
+      --accent: #e879f9;
+      --accent-fg: #2d0050;
+      --alert: #ff4d8d;
+      --comment: #c084fc;
+      --card-shadow: 0 0 28px rgba(232,121,249,0.1), 0 0 0 1px rgba(124,58,237,0.45);
+      --focus-shadow: 0 0 0 3px rgba(232,121,249,0.3);
+    }
+
+    body {
+      color: var(--foreground);
+      margin: 0;
+      display: flex;
+      font-size: 16px;
+      min-height: 100svh;
+      max-height: 100svh;
+      box-sizing: border-box;
+      align-items: flex-start;
+      font-family: system-ui, -apple-system, sans-serif;
+      background: var(--background);
+      transition: background 0.2s, color 0.2s;
+    }</style><script>window.$ = (selector) => document.querySelector(selector);
+    const _t = localStorage.getItem('theme');
+    if (_t) document.documentElement.dataset.theme = _t;</script><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1,interactive-widget=resizes-content"><link rel="shortcut icon" type="image/x-icon" href="favicon.ico"><title>Search</title></head><body><div id="content"><div id="first-column" class="flex-column card"><div class="flex-column gap-1"><div class="flex-space"><h2 data-i18n="googleSearch">Google Search</h2><div class="flex gap-05"><div class="pill-switcher"><button data-lang-btn="uk">UA</button> <button data-lang-btn="en">EN</button></div><div class="pill-switcher"><button data-theme-btn="auto" data-i18n-title="themeAuto" title="Auto">◑</button> <button data-theme-btn="light" data-i18n-title="themeLight" title="Light">☀</button> <button data-theme-btn="dark" data-i18n-title="themeDark" title="Dark">☾</button> <button data-theme-btn="synthwave" data-i18n-title="themeSynthwave" title="Synthwave">✦</button></div></div></div><form class="flex gap-1 wrap" action="https://www.google.com/search" autocomplete="off"><textarea id="google-search-query-input" name="q" rows="2" data-i18n-placeholder="searchPlaceholder" placeholder="Search Google..." role="searchbox" aria-label="Search Google"></textarea> <input type="hidden" id="google-search-udm-param" name="udm" value="14"><div class="flex gap-1"><button id="google-search-button" type="submit" data-i18n="searchBtn">Search</button> <button id="google-search-clear-input-button" type="button" data-i18n="clearBtn">Clear</button></div></form><div class="input-group"><input id="exclude-rules-input" name="exclude-rules-input" data-i18n-placeholder="excludePlaceholder" data-i18n-title="excludeTitle" placeholder="e.g. -ru -и" title="Exclusion rules, space-separated"> <button id="reset-filter-button" type="button" data-i18n="resetBtn">Reset</button></div></div><div class="history"><h2 class="pb-05" data-i18n="searchHistory">Search History</h2><ol id="search-history-list"></ol></div></div><div id="bookmarks-list" class="flex card flex-1"><div id="new-bookmark"><dialog id="create-new-bookmark-dialog"><form class="flex-column gap-1" method="dialog"><h3 data-i18n="newBookmarkDialogTitle">New Bookmark</h3><div class="flex-column gap-1"><input data-i18n-placeholder="urlPlaceholder" placeholder="URL" required autocomplete="off"/> <input data-i18n-placeholder="titlePlaceholder" placeholder="Title (optional)" autocomplete="off"/></div><div class="flex-end gap-1"><button type="button" class="cancel" data-i18n="cancelBtn">Cancel</button> <button type="submit" class="primary" data-i18n="saveBtn">Save</button></div></form></dialog><button id="create-new-bookmark-button" class="bookmark-cell" data-i18n="newBookmarkBtn" onclick="$('#create-new-bookmark-dialog').showModal()">+ New Bookmark</button></div></div><div class="help-section"><dialog id="help-dialog"><p class="comment mb-1" data-i18n-html="helpContent"><b>Enter</b> ——————— search<br/><b>Ctrl+Enter</b> ——— new line<br/>Click history — fill input<br/>Dbl-click history — search<br/></p><form class="flex-end" method="dialog"><button data-i18n="okBtn">OK</button></form></dialog><button class="help" title="?" onclick="$('#help-dialog').showModal()">?</button></div></div><script defer="defer" src="bundle.js"></script></body></html>
